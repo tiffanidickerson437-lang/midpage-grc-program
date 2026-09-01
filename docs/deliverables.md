@@ -54,7 +54,7 @@ every push, not asserted in prose.
 | Document | What it is |
 |---|---|
 | [Public surface map](../00-governance/public-surface-map.md) | Every source, every date. The sourcing spine — if a claim is not traceable here, it does not belong in this repository. |
-| [Open questions](../00-governance/open-questions.md) | Thirteen things not answerable from outside, written as questions rather than inferred past. |
+| [Open questions](../00-governance/open-questions.md) | Fifteen things not answerable from outside, written as questions rather than inferred past. |
 | [Model-provider tier](../01-tprm/model-provider-tier.md) | Where a standard SaaS questionnaire stops working, and what the tier-1 review has to cover instead. |
 | [EU establishment](../02-ai-governance/eu-establishment/) | **F4.** A Berlin office against a US-export data-protection posture. |
 | [Data-use commitments](../02-ai-governance/data-use-commitments.md) | **F6.** Three public statements about customer data that outside counsel will read together. |

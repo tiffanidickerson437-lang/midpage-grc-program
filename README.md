@@ -126,7 +126,7 @@ document about one.
 
 | | Pillar | What is in it |
 |---|---|---|
-| 00 | [Governance](00-governance/) | Surface map and thirteen open questions — the research position, auditable |
+| 00 | [Governance](00-governance/) | Surface map and fifteen open questions — the research position, auditable |
 | 01 | [TPRM](01-tprm/) | The model-provider tier: where a standard SaaS questionnaire stops working |
 | 02 | [AI governance](02-ai-governance/) | The EU establishment question; three data-use commitments in tension |
 | 03 | [Secure development](03-secure-development/) | Model routing as a governed change type, notice gate first |

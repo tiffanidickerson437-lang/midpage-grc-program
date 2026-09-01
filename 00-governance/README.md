@@ -9,7 +9,7 @@ anywhere in this repository traces to a row in it, with the URL and the date it 
 read. If a finding cannot be traced there, it does not belong here.
 
 **[`open-questions.md`](open-questions.md)** is the other half of the same discipline:
-thirteen things that cannot be answered from outside, written down as questions rather
+fifteen things that cannot be answered from outside, written down as questions rather
 than inferred past. A gap assessment that guesses at these and presents the guesses as
 findings is not more thorough — it is less trustworthy, and the first person to check
 one will discount all the rest.
