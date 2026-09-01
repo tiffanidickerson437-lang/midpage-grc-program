@@ -1,0 +1,53 @@
+# Static analysis on the checkers themselves.
+#
+# This repository ships compliance tooling, and SECURITY.md names the highest-severity
+# defect class here as "a checker that passes invalid input." CodeQL will not catch a
+# logic error in a comparator — the test suites' mutation guards exist for that — but it
+# does catch the class of defect a human reviewer stops seeing after the third read:
+# path handling, injection surfaces, unsafe deserialisation.
+#
+# `security-extended` rather than the default suite. The code here is small enough that
+# the extra false-positive budget costs nothing, and a compliance repository running the
+# lighter query set would be making the trade the wrong way.
+
+name: CodeQL
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    # Weekly, so a newly published query reaches this code without waiting for a commit.
+    - cron: "27 3 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  analyze:
+    name: Analyze (${{ matrix.language }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      security-events: write
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [python, actions]
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@cdf488f595d80d6e07e03d4674febd5ab45fa938 # v4.37.9
+        with:
+          languages: ${{ matrix.language }}
+          queries: security-extended
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@cdf488f595d80d6e07e03d4674febd5ab45fa938 # v4.37.9
+        with:
+          category: "/language:${{ matrix.language }}"

@@ -35,13 +35,23 @@ jobs:
         with:
           python-version: '3.12'
 
-      # Two invocations, not one. requirements.txt is hash-pinned, and pip applies
-      # hash checking to the entire resolution once any requirement carries a hash —
-      # so pulling the unpinned test dependency into the same install would fail.
-      - name: Install
-        run: |
-          pip install -r requirements.txt
-          pip install -r requirements-dev.txt
+      # SECURITY.md claims requirements.txt is hash-pinned. This proves it rather than
+      # asserting it: --require-hashes fails the build if any digest is missing or
+      # wrong, so the claim cannot quietly stop being true.
+      - name: Install the runtime dependency, hash-verified
+        run: pip install --require-hashes -r requirements.txt
+
+      # Separately, and unpinned on purpose. pip applies hash checking to the entire
+      # resolution once any requirement carries a hash, so the test dependency cannot
+      # share an install with the hash-pinned one.
+      - name: Install the test dependency
+        run: pip install -r requirements-dev.txt
+
+      # SECURITY.md also claims every action is pinned to a full commit SHA. Same
+      # principle: a stated control with nothing enforcing it is the exact defect this
+      # repository exists to point at.
+      - name: Every action is pinned to a commit SHA
+        run: python3 .github/check_action_pins.py --strict
 
       # The validators run FIRST. If an observation file is invalid, the tests that
       # assert "the committed data is valid" would fail anyway — but this ordering puts
@@ -55,8 +65,11 @@ jobs:
       - name: Validate the metric observations
         run: python3 05-stakeholder-management/public-claims-consistency/check_metrics.py --check
 
+      # From the repository root, so the pinning checker's own suite runs too. A
+      # checker without a mutation guard is a finding under this repository's own
+      # security policy, and that applies to the ones in .github as much as the rest.
       - name: Attack every checker
-        run: python3 -m pytest 05-stakeholder-management/public-claims-consistency -q
+        run: python3 -m pytest -q
 
       # Every rendered report must be reproducible from its source. If a rendered
       # report differs from what is committed, the committed one is stale and the

@@ -1,0 +1,32 @@
+# Block a pull request that introduces a vulnerable or badly-licensed dependency.
+#
+# This repository has exactly one runtime dependency and one test dependency, which is
+# the point: the smaller the surface, the more seriously it is worth defending. A
+# dependency added in a pull request is the realistic way something gets in here, and
+# reviewing that by eye is exactly the control that stops working after the tenth PR.
+#
+# `fail-on-severity: low` looks aggressive and is not. At two dependencies, a finding of
+# any severity is a real decision, not noise to be triaged.
+
+name: dependency review
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Review dependency changes
+        uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5.0.0
+        with:
+          fail-on-severity: low
+          comment-summary-in-pr: on-failure

@@ -41,15 +41,41 @@ Subprocessor disclosure — dpa-list 18 vs trust-center 15
   [UNDISCLOSED ] Pinecone is on the contractual list and absent from the trust center
 ```
 
-Then attack the checkers themselves — **93 tests** across three suites. Every checker
+Then attack the checkers themselves — **112 tests** across four suites. Every checker
 carries a **control test** (clean input must produce zero findings) and a **mutation
 guard** (gut a comparator to always-pass and its own suite turns red). Same inputs, same
 output, every run. No model in the pass/fail path.
 
 ```bash
-pip install -r requirements-dev.txt
+pip install -r requirements.txt && pip install -r requirements-dev.txt
 python3 -m pytest -q
 ```
+
+## This repository's own security
+
+A compliance repository that states controls it does not enforce is the exact defect it
+exists to point at. So every control claimed in [`SECURITY.md`](SECURITY.md) is checked
+by something, and the check runs on every push:
+
+| Control | How it is enforced |
+|---|---|
+| Every checker fails closed on bad input | Each suite carries a **control test** — clean input must produce zero findings — so a checker that flagged everything could not pass |
+| No checker can be neutered silently | Each suite carries a **mutation guard** — gut the comparator and that suite goes red |
+| The one runtime dependency is hash-pinned | CI installs with `pip install --require-hashes`, which fails the build if a digest is missing or wrong |
+| Every GitHub Action is pinned to a commit SHA | [`check_action_pins.py`](.github/check_action_pins.py) enforces it, with [19 tests](.github/test_check_action_pins.py) of its own — including one that fails if the workflow directory is empty, so the check cannot pass vacuously |
+| No rendered report drifts from its source | CI re-renders all three and fails on any diff |
+| Static analysis on the tooling | [CodeQL](.github/workflows/codeql.yml), `security-extended`, across Python **and** the workflows themselves, weekly and on every push |
+| A vulnerable dependency cannot enter by PR | [Dependency review](.github/workflows/dependency-review.yml), `fail-on-severity: low` — at two dependencies, any finding is a decision rather than noise |
+| Action and dependency updates are reviewed | [Dependabot](.github/dependabot.yml) on both ecosystems; SHA pinning is the control, and needing to update deliberately is its cost |
+| No workflow can swallow a failure | No `|| true`, no `continue-on-error`, anywhere. A green check that cannot go red is decoration |
+
+Repository settings: secret scanning and push protection on, Dependabot alerts and
+security updates on, `main` protected and gated on the `tests` check. Workflow
+permissions are `contents: read` everywhere except the CodeQL job, which additionally
+needs `security-events: write` to upload its results.
+
+Report a defect through GitHub's private vulnerability reporting — see
+[`SECURITY.md`](SECURITY.md) for the threat model and what counts as in scope here.
 
 ---
 

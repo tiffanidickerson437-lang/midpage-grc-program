@@ -33,6 +33,14 @@ Beyond the usual, these are specifically in scope because of what this repositor
 | **A path where an observation can drift without its date changing** | The observation files record what a page said, and when. Any route to editing a quote while keeping its `checked` date is a data-integrity defect. |
 | **Dependency or workflow supply-chain issues** | Actions are pinned to full commit SHAs and `requirements.txt` is hash-pinned; a tag-based reference or an unhashed line slipping in is a finding. |
 
+Each of those is enforced rather than asserted. The control tests and mutation guards
+live in the suites themselves; `pip install --require-hashes` in CI proves the hash
+pinning; [`check_action_pins.py`](.github/check_action_pins.py) proves the SHA pinning
+and carries its own mutation guard; CodeQL runs `security-extended` over both the Python
+and the workflow files; and dependency review blocks a vulnerable package at `low`
+severity on the way in. A control this document claims and nothing checks would be, by
+this repository's own argument, a finding against this repository.
+
 ## What is out of scope
 
 - **Anything about Midpage's actual security posture.** This repository contains no

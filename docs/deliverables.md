@@ -25,7 +25,7 @@ CI regenerates all three and fails if any is stale.
 
 ## The test suites
 
-93 tests across three suites. Every checker carries a **control test** (clean input must
+112 tests across four suites. Every checker carries a **control test** (clean input must
 produce zero findings) and a **mutation guard** (gut the comparator and the suite must go
 red).
 
@@ -34,6 +34,20 @@ red).
 | [`test_check_retention.py`](../05-stakeholder-management/public-claims-consistency/test_check_retention.py) | 33 |
 | [`test_subprocessor_consistency.py`](../05-stakeholder-management/public-claims-consistency/test_subprocessor_consistency.py) | 29 |
 | [`test_check_metrics.py`](../05-stakeholder-management/public-claims-consistency/test_check_metrics.py) | 31 |
+| [`test_check_action_pins.py`](../.github/test_check_action_pins.py) | 19 |
+
+## The repository's own controls
+
+Everything [`SECURITY.md`](../SECURITY.md) claims is enforced by something that runs on
+every push, not asserted in prose.
+
+| File | What it is |
+|---|---|
+| [`check_action_pins.py`](../.github/check_action_pins.py) | Enforces the SHA-pinning control on every workflow, and refuses to pass when the workflow directory is empty |
+| [`tests.yml`](../.github/workflows/tests.yml) | Hash-verified install, the pinning check, all four suites, and a render-staleness gate. No step may swallow a failure |
+| [`codeql.yml`](../.github/workflows/codeql.yml) | `security-extended`, across Python and the workflow files themselves, weekly and on push |
+| [`dependency-review.yml`](../.github/workflows/dependency-review.yml) | Blocks a PR introducing a vulnerable or badly-licensed dependency, at `low` severity |
+| [`dependabot.yml`](../.github/dependabot.yml) | Actions and pip, weekly — the cost of pinning to SHAs is that something has to update them |
 
 ## The written work
 
