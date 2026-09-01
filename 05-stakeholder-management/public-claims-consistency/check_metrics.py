@@ -37,29 +37,33 @@ No network call, no API key, no model in any code path.
 """
 
 import argparse
-import datetime as _dt
 import os
-import re
 import sys
 
-import yaml
+from _claims_common import (
+    DataError,
+    load_yaml,
+    require_https_url,
+    require_iso_date,
+    require_lowercase_slug,
+)
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 DEFAULT_DATA = os.path.join(HERE, "metrics.yaml")
 REPORT = os.path.join(HERE, "metric-findings.md")
 
 VALID_PARTY = {"first", "third"}
-
-
-class DataError(ValueError):
-    pass
+VALID_AUDIENCE = {"marketing", "analyst", "assurance", "legal"}
 
 
 def load(path):
-    with open(path, encoding="utf-8") as fh:
-        data = yaml.safe_load(fh)
+    data = load_yaml(path)
     validate(data)
     return data
+
+
+def comparable(surface):
+    return surface["party"] == "first" and surface.get("comparable") is not False
 
 
 def validate(data):
@@ -81,23 +85,26 @@ def validate(data):
     first_party = 0
     for s in surfaces:
         sid = s.get("id", "?")
-        for field in ("id", "url", "party", "checked", "figures"):
+        for field in ("id", "url", "party", "audience", "checked", "figures"):
             if not s.get(field):
                 raise DataError("surface %r: %s missing" % (sid, field))
-        if not re.fullmatch(r"[a-z0-9-]+", str(s["id"])):
-            raise DataError("surface id %r must be a lowercase slug" % sid)
-        if not str(s["url"]).startswith("https://"):
-            raise DataError("surface %r: url must be https://" % sid)
+        require_lowercase_slug(s["id"])
+        require_https_url(sid, s["url"])
         if s["id"] in seen:
             raise DataError("duplicate surface id %r" % sid)
         seen.add(s["id"])
         if s["party"] not in VALID_PARTY:
             raise DataError("surface %r: party must be one of %s"
                             % (sid, sorted(VALID_PARTY)))
-        try:
-            _dt.date.fromisoformat(str(s["checked"]))
-        except ValueError:
-            raise DataError("surface %r: checked is not an ISO date" % sid)
+        if s["audience"] not in VALID_AUDIENCE:
+            raise DataError("surface %r: audience must be one of %s"
+                            % (sid, sorted(VALID_AUDIENCE)))
+        require_iso_date(sid, s["checked"])
+
+        # comparable must be an actual boolean. A quoted "false" is truthy and would
+        # silently bypass both this exclusion check and comparable() below.
+        if "comparable" in s and not isinstance(s["comparable"], bool):
+            raise DataError("surface %r: comparable must be a boolean" % sid)
 
         # An excluded surface must say why. Silent exclusions are how a comparison
         # quietly becomes whatever its author wanted it to be.
@@ -106,7 +113,10 @@ def validate(data):
             raise DataError("surface %r: comparable:false requires "
                             "incomparable_because" % sid)
 
-        if s["party"] == "first":
+        # Count surfaces that will actually be compared, not just party=='first' —
+        # a first-party surface excluded via comparable:false must not count toward
+        # the "we have a real comparison" gate below.
+        if comparable(s):
             first_party += 1
 
         if not isinstance(s["figures"], list) or not s["figures"]:
@@ -129,10 +139,6 @@ def validate(data):
         raise DataError("need at least two first-party surfaces; the comparison this "
                         "tool makes is between what the company says and what the "
                         "company says elsewhere")
-
-
-def comparable(surface):
-    return surface["party"] == "first" and surface.get("comparable") is not False
 
 
 def find(data):
@@ -168,7 +174,7 @@ def find(data):
                                  spread, s1["checked"]),
                 })
 
-        if metrics[mid].get("definition_required") and len(entries) > 1:
+        if metrics[mid].get("definition_required"):
             findings.append({
                 "type": "DEFINITION_UNSTATED",
                 "metric": mid,

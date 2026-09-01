@@ -40,7 +40,13 @@ import os
 import re
 import sys
 
-import yaml
+from _claims_common import (
+    DataError,
+    load_yaml,
+    require_https_url,
+    require_iso_date,
+    require_lowercase_slug,
+)
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 DEFAULT_DATA = os.path.join(HERE, "subprocessors.yaml")
@@ -49,13 +55,8 @@ REPORT = os.path.join(HERE, "subprocessor-findings.md")
 VALID_AUTHORITY = {"contractual", "assurance"}
 
 
-class DataError(ValueError):
-    pass
-
-
 def load(path):
-    with open(path, encoding="utf-8") as fh:
-        data = yaml.safe_load(fh)
+    data = load_yaml(path)
     validate(data)
     return data
 
@@ -89,10 +90,8 @@ def validate(data):
         for field in ("id", "url", "checked", "authority", "note", "providers"):
             if not s.get(field):
                 raise DataError("surface %r: %s missing" % (sid, field))
-        if not re.fullmatch(r"[a-z0-9-]+", str(s["id"])):
-            raise DataError("surface id %r must be a lowercase slug" % sid)
-        if not str(s["url"]).startswith("https://"):
-            raise DataError("surface %r: url must be https://" % sid)
+        require_lowercase_slug(s["id"])
+        require_https_url(sid, s["url"])
         if s["id"] in seen_ids:
             raise DataError("duplicate surface id %r" % sid)
         seen_ids.add(s["id"])
@@ -104,10 +103,7 @@ def validate(data):
                             "means something across a contractual/assurance pair"
                             % s["authority"])
         seen_authority.add(s["authority"])
-        try:
-            _dt.date.fromisoformat(str(s["checked"]))
-        except ValueError:
-            raise DataError("surface %r: checked is not an ISO date" % sid)
+        require_iso_date(sid, s["checked"])
         if not isinstance(s["providers"], list) or not s["providers"]:
             raise DataError("surface %r: providers must be a non-empty list" % sid)
         normalised = []

@@ -16,15 +16,17 @@ Four defect classes, each live on 2026-09-01:
   CONTRADICTION   two surfaces give incompatible dispositions for the same data path
                   ("Zero Day Retention required from every model provider we use"
                   against "Model providers may retain submitted queries for up to
-                  60 days")
+                  60 days"); this also covers two "bounded" surfaces stating different
+                  day counts for the same path, and any surface silent on a period
+                  ("unspecified") paired with another surface that asserts one
   INHERITED_GAP   a surface claims no retention on a path that rides on a downstream
                   path another surface bounds, without disclosing the dependency
                   (the hosted MCP server "has no data retention")
-  PERIOD_ABSENT   the assurance surface addresses a path but states no period, while
-                  other surfaces state one — the reader most likely to need the number
-                  is the one least likely to find it
-  BACKUP_CARVEOUT a bounded period whose own caveat has no horizon, so the stated
-                  maximum is not in fact a maximum
+  PERIOD_ABSENT   a surface addresses a path but states no period, while other
+                  surfaces state one — the reader most likely to need the number is
+                  the one least likely to find it
+  BACKUP_CARVEOUT a bounded period whose own caveat has no stated horizon, so the
+                  stated maximum is not in fact a maximum
 
 A disclosed dependency is not a defect. The security page says plugin workflows "may
 still share submitted queries with model providers" in the same sentence as its
@@ -44,12 +46,17 @@ No network call, no API key, no model in any code path.
 """
 
 import argparse
-import datetime as _dt
 import os
 import re
 import sys
 
-import yaml
+from _claims_common import (
+    DataError,
+    load_yaml,
+    require_https_url,
+    require_iso_date,
+    require_lowercase_slug,
+)
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 DEFAULT_DATA = os.path.join(HERE, "retention-claims.yaml")
@@ -66,17 +73,20 @@ INCOMPATIBLE = {
     frozenset({"zero", "stored"}),
     frozenset({"none", "bounded"}),
     frozenset({"none", "stored"}),
+    frozenset({"zero", "unspecified"}),
+    frozenset({"none", "unspecified"}),
+    frozenset({"bounded", "unspecified"}),
+    frozenset({"stored", "unspecified"}),
 }
 
-
-class DataError(ValueError):
-    """The observation file is malformed. A checker that guesses past bad input is a
-    checker whose findings cannot be trusted, so this always stops the run."""
+# A caveat "states a horizon" if it names a concrete period. Without one, an
+# exception to a bounded maximum is itself unbounded — the defect BACKUP_CARVEOUT
+# exists to catch.
+HORIZON_RE = re.compile(r"\d+\s*(day|month|year)s?\b", re.I)
 
 
 def load(path):
-    with open(path, encoding="utf-8") as fh:
-        data = yaml.safe_load(fh)
+    data = load_yaml(path)
     validate(data)
     return data
 
@@ -106,23 +116,15 @@ def validate(data):
         for field in ("id", "url", "audience", "checked", "assertions"):
             if not s.get(field):
                 raise DataError("surface %r: %s missing" % (sid, field))
-        if not re.fullmatch(r"[a-z0-9-]+", str(s["id"])):
-            raise DataError("surface id %r must be a lowercase slug — ids land "
-                            "verbatim in rendered markdown" % sid)
-        if not str(s["url"]).startswith("https://"):
-            raise DataError("surface %r: url must be https:// — an observation of a "
-                            "non-TLS page is not the observation this file claims, "
-                            "and the url lands in a rendered markdown link" % sid)
+        require_lowercase_slug(s["id"])
+        require_https_url(sid, s["url"])
         if s["id"] in seen:
             raise DataError("duplicate surface id %r" % sid)
         seen.add(s["id"])
         if s["audience"] not in VALID_AUDIENCES:
             raise DataError("surface %r: audience must be one of %s"
                             % (sid, sorted(VALID_AUDIENCES)))
-        try:
-            _dt.date.fromisoformat(str(s["checked"]))
-        except ValueError:
-            raise DataError("surface %r: checked is not an ISO date" % sid)
+        require_iso_date(sid, s["checked"])
 
         if not isinstance(s["assertions"], list) or not s["assertions"]:
             raise DataError("surface %r: assertions must be a non-empty list" % sid)
@@ -189,18 +191,27 @@ def find(data):
                                      s1["id"], a1["disposition"], _period(a1),
                                      s2["id"], a2["disposition"], _period(a2)),
                     })
+                elif a1["disposition"] == "bounded" and a2["disposition"] == "bounded" \
+                        and a1["days"] != a2["days"]:
+                    findings.append({
+                        "type": "CONTRADICTION",
+                        "path": path,
+                        "detail": "%s: %s asserts '%s' (%d days), %s asserts '%s' "
+                                  "(%d days)"
+                                  % (labels[path],
+                                     s1["id"], a1["disposition"], a1["days"],
+                                     s2["id"], a2["disposition"], a2["days"]),
+                    })
 
-        # PERIOD_ABSENT — an assurance surface silent on a period others state.
+        # PERIOD_ABSENT — a surface silent on a period others state.
         stated = [(s, a) for s, a in entries if a["disposition"] == "bounded"]
         for s, a in entries:
-            if a["disposition"] == "unspecified" and stated and \
-                    s["audience"] == "assurance":
+            if a["disposition"] == "unspecified" and stated:
                 findings.append({
                     "type": "PERIOD_ABSENT",
                     "path": path,
-                    "detail": "%s: %s is an assurance surface and states no period, "
-                              "while %s state %s"
-                              % (labels[path], s["id"],
+                    "detail": "%s: %s (%s) states no period, while %s state %s"
+                              % (labels[path], s["id"], s["audience"],
                                  ", ".join(sorted(x["id"] for x, _ in stated)),
                                  ", ".join(sorted({"%d days" % b["days"]
                                                    for _, b in stated}))),
@@ -227,8 +238,12 @@ def find(data):
             })
 
     # BACKUP_CARVEOUT — a stated maximum with an unbounded exception attached.
+    # An exception that itself names a period (e.g. "purged within 35 days") is not
+    # this defect — the finding text asserts "no stated horizon" and must not say so
+    # when the caveat states one.
     for s, a in _assertions(data):
-        if a["disposition"] == "bounded" and str(a.get("caveat", "")).strip():
+        caveat = str(a.get("caveat", "")).strip()
+        if a["disposition"] == "bounded" and caveat and not HORIZON_RE.search(caveat):
             findings.append({
                 "type": "BACKUP_CARVEOUT",
                 "path": a["path"],

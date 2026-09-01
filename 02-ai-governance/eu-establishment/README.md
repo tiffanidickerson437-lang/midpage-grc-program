@@ -20,8 +20,10 @@ Four public facts, none of which is contested:
 3. **A European counterparty.** Midpage's own post of 27 July 2026 names **Noxtua**,
    a Berlin-based European legal-AI company, as one of the multibillion-dollar
    organisations relying on Midpage as a legal data supplier.
-4. **A German founder and a German investor.** The Form D signature block names Otto
-   Zastrow Marcks; the seed round included LEA Partners, a Karlsruhe firm.
+4. **A German founder.** The Form D signature block names Otto Zastrow Marcks as
+   director and executive officer. The seed round's lead investor is not named on any
+   public surface — Midpage's own reporting describes it only as "a major legal
+   publishing house" — so it is not counted as a fact here.
 
 ## What is missing from the same surfaces
 
