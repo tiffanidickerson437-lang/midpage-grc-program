@@ -111,15 +111,6 @@ eu_exposure:
 
 author:
   relationship: "paying Midpage subscriber"        # disclosed
-  employer: "Workstreet"                           # disclosed
-  employer_note: >
-    Workstreet is a GRC consultancy and a Vanta MSP partner, and Midpage is a Vanta
-    customer with no compliance headcount — which makes Midpage a plausible Workstreet
-    prospect. Disclosed here, up front, for exactly that reason. This repository is
-    personal work, built on personal time, from public sources only. It is not a
-    Workstreet engagement, not a Workstreet work product, and not a solicitation on
-    Workstreet's behalf. No Workstreet client information, methodology, or non-public
-    material appears anywhere in it.
   # Disclosed for the same reason any conflict is disclosed: so a reader can weigh it.
   # No account data, no support correspondence, and no in-product observation appears
   # anywhere in this repository. Every finding traces to a public page.

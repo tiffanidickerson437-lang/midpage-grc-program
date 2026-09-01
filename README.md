@@ -143,21 +143,14 @@ document about one.
    [in the config](generated/companies/midpage/midpage.config.yaml) precisely because
    **no account data, support correspondence, or in-product observation is used anywhere
    in this repository.**
-2. **The author's employer is disclosed too, up front.** She works at **Workstreet**, a
-   GRC consultancy and Vanta MSP partner — and Midpage is a Vanta customer with no
-   compliance headcount, which makes Midpage a plausible Workstreet prospect. That is
-   precisely why it is written here rather than left to be discovered. This is personal
-   work on personal time from public sources. It is not a Workstreet engagement, not a
-   Workstreet work product, and not a solicitation on Workstreet's behalf; no Workstreet
-   client information or methodology appears in it.
-3. **Gaps are the work, never the criticism.**
-4. **Evidence is computed, never authored.** `evidence_in_repo: none` — the instruments
+2. **Gaps are the work, never the criticism.**
+3. **Evidence is computed, never authored.** `evidence_in_repo: none` — the instruments
    run against committed, dated observations of public pages, and no output should be
    read as if they touched a Midpage system.
-5. **Live pages change without notice.** A finding that was true in September and
+4. **Live pages change without notice.** A finding that was true in September and
    asserted in November is not a finding; the checkers exist so the observation can be
    re-run, not remembered.
-6. **No third party is characterised.** Midpage's auditor is named on their own security
+5. **No third party is characterised.** Midpage's auditor is named on their own security
    page and is deliberately absent from this repository. None of the seven findings needs
    an opinion about an audit firm, and this repository does not offer one.
 
