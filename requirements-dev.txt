@@ -1,0 +1,8 @@
+# Test-only dependency, kept out of requirements.txt on purpose.
+#
+# requirements.txt is hash-pinned so `pip install --require-hashes` works, and a single
+# unhashed line in that file would disable hash verification for every line in it. The
+# instruments themselves import nothing from here — `pip install pyyaml` runs all three.
+
+-r requirements.txt
+pytest>=8.0

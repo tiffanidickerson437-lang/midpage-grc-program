@@ -1,0 +1,86 @@
+# subprocessors.yaml — the two public Midpage subprocessor disclosures, as observed.
+#
+# Midpage publishes its subprocessors in two places. One of them is named in the
+# Data Processing Addendum as THE list, and carries a contractual advance-notice
+# promise attached to it. The other is the Vanta-powered trust center, which is the
+# surface an enterprise reviewer or an auditor actually opens.
+#
+# Both were fetched on 2026-09-01. Names are recorded exactly as each page spells them;
+# the alias map below is what makes "Neon" and "NeonDB" one provider rather than two.
+#
+# This file records disagreement between Midpage's own disclosures. It does not, and
+# cannot, say which list is correct. DPA section 4.2 is why someone inside has to.
+
+schema_version: 1
+
+tier: "all disclosed subprocessors"
+
+# The contractual hook. Recorded here because it is what converts a tidy documentation
+# inconsistency into a commitment that may not be being met.
+commitment:
+  source: https://www.midpage.ai/dpa
+  effective: "2026-04-28"
+  clause: "4.2"
+  quote: "Midpage maintains a list of its Sub-processors at
+    https://www.midpage.ai/subprocessors. Midpage will provide reasonable advance notice
+    (via updates to such list or email notification) before allowing any new
+    Sub-processor to Process Customer Personal Data."
+
+aliases:
+  neondb: neon
+  "cohere api": cohere
+  "mistral ai": mistral
+
+surfaces:
+  - id: dpa-list
+    url: https://www.midpage.ai/subprocessors
+    checked: "2026-09-01"
+    page_dated: "2026-06-10"
+    authority: contractual
+    note: >
+      The list the DPA points to by URL. Rendered as a table with Location, Processing
+      Activity, and Scope columns. Page states "Last updated June 10, 2026".
+    providers:
+      - OpenAI
+      - Anthropic
+      - Google
+      - Mistral
+      - Cohere
+      - Elastic
+      - Pinecone
+      - NeonDB
+      - PlanetScale
+      - Prefect
+      - Vercel
+      - Clerk
+      - Stripe
+      - Langfuse
+      - Mixpanel
+      - Sentry
+      - Datadog
+      - Intercom
+
+  - id: trust-center
+    url: https://trust.midpage.ai/subprocessors
+    checked: "2026-09-01"
+    authority: assurance
+    note: >
+      The Vanta-powered trust center panel, reached from trust.midpage.ai. Paginated,
+      self-reporting "1-10 of 15 results"; the full set was read from the expanded
+      "All subprocessors" listing.
+    providers:
+      - Anthropic
+      - Google
+      - OpenAI
+      - Vercel
+      - Stripe
+      - Sentry
+      - Clerk
+      - Cohere API
+      - Elastic
+      - Langfuse
+      - Mistral AI
+      - Mixpanel
+      - Neon
+      - PlanetScale
+      - prefect

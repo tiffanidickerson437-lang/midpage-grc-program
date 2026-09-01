@@ -1,0 +1,61 @@
+# metrics.yaml — traction figures Midpage publishes about itself, per surface.
+#
+# Recorded because two live Midpage pages give two different answers to the same
+# question at the same time, and because an enterprise buyer who notices that will
+# discount every other number on the page, including the ones in the security section.
+#
+# All surfaces fetched 2026-09-01.
+#
+# A note on the third-party row: it is present for context and is deliberately NOT
+# comparable. Semrush measures site visits; Midpage's pages claim unique visitors who
+# read cases. Those are different quantities, and a checker that treated them as the
+# same would be manufacturing a finding. The comparison the tool actually makes is
+# between Midpage's own first-party figures, which are stated in the same terms.
+
+schema_version: 1
+
+metrics:
+  monthly-unique-visitors:
+    label: "Monthly unique visitors"
+    definition_required: true
+    note: >
+      Neither first-party surface defines the population (all site visitors, or only
+      those who open a case), the measurement window, or the measurement source.
+
+surfaces:
+  - id: homepage
+    url: https://www.midpage.ai/
+    party: first
+    audience: marketing
+    checked: "2026-09-01"
+    figures:
+      - metric: monthly-unique-visitors
+        value: 200000
+        qualifier: "+"
+        quote: "200k+ Unique monthly visitors read cases on Midpage"
+
+  - id: data-for-legal-tech
+    url: https://www.midpage.ai/data-for-legal-tech
+    party: first
+    audience: marketing
+    checked: "2026-09-01"
+    figures:
+      - metric: monthly-unique-visitors
+        value: 150000
+        qualifier: "+"
+        quote: "150K+ Monthly unique visitors to Midpage content"
+
+  - id: semrush-via-crunchbase
+    url: https://www.crunchbase.com/organization/midpage-ai
+    party: third
+    audience: analyst
+    checked: "2026-09-01"
+    comparable: false
+    incomparable_because: >
+      Measures monthly web visits to the domain, not unique visitors who read cases.
+      Recorded as context only; the checker excludes it from the comparison.
+    figures:
+      - metric: monthly-unique-visitors
+        value: 102768
+        qualifier: ""
+        quote: "Monthly Web Visits 102,768, 86.99% in past month (source: Semrush)"

@@ -1,0 +1,105 @@
+# retention-claims.yaml — what each public Midpage surface asserts about how long
+# customer queries, uploads, and outputs persist, and on whose infrastructure.
+#
+# This file is an OBSERVATION, not a posture statement. Each entry records what a page
+# said on the date recorded, with the quote that supports it. When a page changes, the
+# right move is to re-observe and update the entry with a new `checked` date — never to
+# edit a quote so it says what the page "should" say. The checker compares these
+# observations against one another. It decides nothing about Midpage's actual retention.
+#
+# Every surface below was fetched directly on 2026-09-01. Quotes are short excerpts,
+# kept to the minimum needed to make the observation reproducible.
+
+schema_version: 1
+
+# The data paths a retention claim can be about. Keeping these separate is the whole
+# point: "we do not retain" and "our model providers may retain" are answers to
+# different questions, and a reader who conflates them has been misled by accident.
+paths:
+  web-app:
+    label: "Web application storage (Midpage's own systems)"
+  plugins:
+    label: "Plugin and integration workflows (Midpage's own systems)"
+  mcp-server:
+    label: "Hosted MCP server offered to data customers"
+  model-providers:
+    label: "Third-party model providers receiving submitted queries"
+
+# Dispositions, ordered from strongest claim to weakest.
+#   zero        no retention at all, asserted as a requirement imposed on someone else
+#   none        this party does not store it (says nothing about downstream parties)
+#   bounded     retained for a stated maximum period (`days` required)
+#   stored      retained while the relationship is active
+#   unspecified the surface addresses the path but states no period
+#
+# `depends_on` names a downstream path a claim rides on. A claim of `none` or `zero`
+# whose downstream path is `bounded` on some other surface is only sound if the surface
+# says so itself — which is what `discloses_dependency` records.
+
+surfaces:
+  - id: security-page
+    url: https://www.midpage.ai/security
+    audience: assurance
+    checked: "2026-09-01"
+    page_dated: "April 2026"
+    assertions:
+      - path: web-app
+        disposition: bounded
+        days: 60
+        quote: "We delete web app data within 60 days of account deletion or a valid
+          deletion request."
+      - path: plugins
+        disposition: none
+        depends_on: model-providers
+        discloses_dependency: true
+        quote: "For plugins and integrations, we do not store submitted queries,
+          uploads, or outputs, though these workflows may still share submitted queries
+          with model providers."
+      - path: model-providers
+        disposition: bounded
+        days: 60
+        quote: "Model providers may retain submitted queries for up to 60 days."
+
+  - id: data-for-legal-tech
+    url: https://www.midpage.ai/data-for-legal-tech
+    audience: marketing
+    checked: "2026-09-01"
+    assertions:
+      - path: model-providers
+        disposition: zero
+        scope: all-providers
+        quote: "SOC 2 Type II certified, HIPAA audited, and Zero Day Retention required
+          from every model provider we use."
+      - path: mcp-server
+        disposition: none
+        depends_on: model-providers
+        discloses_dependency: false
+        quote: "A hosted MCP server with tools that wrap our API and work in your agent
+          out of the box. [...] It has no data retention and no lock-in."
+
+  - id: privacy-policy
+    url: https://www.midpage.ai/privacy-policy
+    audience: legal
+    checked: "2026-09-01"
+    assertions:
+      - path: web-app
+        disposition: bounded
+        days: 60
+        caveat: "Carves out retention required by law and information held in standard
+          backup and record-retention practices, with no stated backup horizon."
+        quote: "Following termination or cancellation of your account, Midpage will
+          delete Personal Information associated with your account within sixty (60)
+          days, except (a) where retention is required by applicable law, or (b) where
+          Personal Information is retained in accordance with Midpage's standard backup
+          and record-retention practices."
+
+  - id: trust-center
+    url: https://trust.midpage.ai/
+    audience: assurance
+    checked: "2026-09-01"
+    assertions:
+      - path: web-app
+        disposition: unspecified
+        quote: "Controls listed under Data and privacy: 'Data retention procedures
+          established', 'Customer data deleted upon leaving', 'Data classification
+          policy established'. No period appears anywhere on the surface."

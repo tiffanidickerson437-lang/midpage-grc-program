@@ -1,0 +1,27 @@
+# Dependency and action updates.
+#
+# The GitHub Actions ecosystem matters more here than pip does: this repository has one
+# Python dependency, but its CI pins every action to a full commit SHA. Pinning to a SHA
+# is the supply-chain control (a tag is mutable; a SHA is not), and the cost of that
+# control is that nothing updates unless something updates it. That is what this file is.
+#
+# Reviewing these is not a chore to automate away — a bumped action SHA is a change to the
+# code that decides whether this repository's checks pass.
+
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "ci"
+
+  - package-ecosystem: pip
+    directory: "/"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "deps"

@@ -1,0 +1,120 @@
+# midpage.config.yaml — one file describing the company the program is rendered for.
+#
+# Every value carries a provenance marker. Nothing here is a guess presented as a fact:
+#
+#   verified   read directly off a public surface listed in the surface map, on the date
+#              recorded there
+#   filed      taken from a government filing (SEC EDGAR)
+#   inferred   reasoned from verified facts; the reasoning is stated inline
+#   unset      deliberately left empty — not observable from outside, and inventing it
+#              would corrupt everything downstream of it
+#
+# The `unset` entries are not omissions. They are the reason this config can be trusted:
+# a renderer that fabricates a headcount or a framework status produces a document that
+# looks complete and is wrong.
+
+schema_version: 1
+
+company:
+  name: Midpage                                    # verified
+  legal_name: Midpage AI Inc.                      # filed — EDGAR CIK 0002067400
+  cik: "0002067400"                                # filed
+  state_of_incorporation: DE                       # filed
+  founded: 2022                                    # verified — company blog, Preqin
+  category: "AI legal research and drafting; primary-law data supplier"   # verified
+  ceo: Otto Zastrow                                # verified
+  # The Form D signature block spells it "Otto Zastrow Marcks".
+  signatory: Otto Zastrow Marcks                   # filed
+
+  addresses:
+    # Five different addresses appear across five surfaces. Recorded as observed rather
+    # than reconciled, because which one is the operating address is a real question.
+    edgar: "4023 Kennett Pike #50346, Wilmington, DE 19807"        # filed
+    privacy_policy: "190 Bowery, New York, NY 10012"               # verified
+    linkedin_primary: "New York, NY 10019"                         # verified
+    linkedin_secondary: "Max-Urich Straße 3, 13355 Berlin, Germany"  # verified
+    crunchbase: "Brooklyn, New York"                               # verified
+
+  headcount: 9                                     # verified — LinkedIn record; PitchBook agrees
+  security_headcount: 0                            # verified — no security, compliance,
+                                                   # privacy, or GRC role in any open posting
+
+funding:
+  # One Form D, ever. Fifteen months old. Data brokers report five conflicting totals;
+  # the filing is the only primary source and it is unambiguous.
+  total_raised_usd: 6443350                        # filed — Form D 2025-05-28
+  accession: "0002067400-25-000001"                # filed
+  rounds_filed: 1                                  # filed
+  exemption: "506(b)"                              # filed
+  security_type: "equity only"                     # filed
+  series_a_filed: false                            # filed — no second Form D on record
+                                                   # as of 2026-09-01
+  lead_investor:                                   # unset — reported as "a major legal
+                                                   # publishing house", never named
+
+revenue:
+  # Third-party reporting, not a filing. Recorded with its source and left un-extrapolated.
+  arr_reported_may_2026_usd: 3000000               # verified — ARR Club
+  arr_current:                                     # unset — not observable
+
+compliance:
+  grc_platform: Vanta                              # verified — trust center footer
+  frameworks_held: [SOC 2 Type II, HIPAA]          # verified
+  frameworks_absent: [ISO 27001, ISO 42001, ISO 27701, PCI DSS, HITRUST, FedRAMP]  # verified
+  trust_center: https://trust.midpage.ai/          # verified
+  dpa_effective: "2026-04-28"                      # verified
+  diligence_contact: legal@midpage.ai              # verified
+  auditor:                                         # unset — named publicly, deliberately
+                                                   # omitted; this repository takes no
+                                                   # position on any audit firm and no
+                                                   # finding here depends on one
+
+data:
+  classes_disclosed: [customer PII, credit card information, personal health information]  # verified
+  subprocessors_contractual_list: 18               # verified — midpage.ai/subprocessors
+  subprocessors_trust_center: 15                   # verified — trust.midpage.ai/subprocessors
+  model_providers: [Anthropic, Google, OpenAI, Mistral]   # verified
+  jurisdictions: [US, EU, CA]                      # verified — Mistral EU, Cohere Canada
+  soc2_scope:                                      # unset — the scope boundary across
+                                                   # web app, plugins, MCP, and the SQL
+                                                   # replica is not published
+
+product_surfaces:                                  # verified
+  - web application
+  - hosted MCP server
+  - REST API
+  - SQL read replica
+  - Claude / ChatGPT / Perplexity integrations
+  - public case-law pages
+
+customers:
+  law_firms_claimed: 300                           # verified — company claim, unaudited
+  litigators_claimed: 10000                        # verified — company claim, unaudited
+  data_customers_claimed: 5                        # verified — company claim, unaudited
+  data_customers_named: [Perplexity, Noxtua]       # verified — company LinkedIn post,
+                                                   # 2026-07-27
+  monthly_unique_visitors_claimed:                 # unset — two first-party surfaces give
+                                                   # two figures (200k+ and 150K+). Left
+                                                   # unset on purpose: this config will not
+                                                   # pick a winner between a company's own
+                                                   # numbers. See F3.
+
+eu_exposure:
+  office_listed: Berlin                            # verified — LinkedIn
+  eu_subprocessor: Mistral AI                      # verified
+  eu_customer_named: Noxtua                        # verified
+  eu_entity:                                       # unset — none published
+  article_27_representative:                       # unset — none published
+  lead_supervisory_authority:                      # unset — none published
+  establishment_status:                            # unset — the central open question;
+                                                   # not determinable from outside
+
+author:
+  relationship: "paying Midpage subscriber"        # disclosed
+  # Disclosed here for the same reason a conflict is disclosed anywhere: so a reader can
+  # weigh it. No account data, no support correspondence, and no in-product observation
+  # appears anywhere in this repository. Every finding traces to a public page.
+  non_public_information_used: none
+
+evidence_in_repo: none
+observations_checked: "2026-09-01"
