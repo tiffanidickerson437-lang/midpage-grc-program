@@ -82,3 +82,14 @@ No security, compliance, or privacy role appears in the org, and diligence route
 shared inbox. The honest possibility is that the answer is "the founder, between other
 things," which at nine people is a reasonable place to have arrived at and an
 unreasonable place to stay.
+
+**14. When does the SOC 2 Type II observation window close?**
+Not publicly determinable — no period, report date, or expiry appears on any surface,
+and the trust center exposes no report-period field. Two readings fit the record and the
+[audit clock](../04-evidence-and-audit/audit-clock.md) shows the reasoning for both. One
+line on the trust center removes this question from every future security review.
+
+**15. Was `/security` revised after 3 July 2026 without updating its own date stamp?**
+It displays "Last updated · April 2026"; Wayback snapshots through 3 July carry neither
+the HIPAA claim nor the auditor badges that are on it now. A stamp is a control
+assertion, and this one is checkable in ninety seconds by anyone doing diligence.

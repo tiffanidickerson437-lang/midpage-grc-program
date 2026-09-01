@@ -10,7 +10,8 @@ instruments in this repository, with tests that attack their own checkers.**
 [![evidence](https://img.shields.io/badge/evidence__in__repo-none-6b7280)](#ground-rules)
 
 **▶ [The walkthrough](https://tiffanidickerson437-lang.github.io/midpage-a41f7c/)** —
-the same argument on one page, addressed to the founder.
+one page, written to Midpage rather than about them: why a paying subscriber cared
+enough to do this, what she found, and what she is asking for.
 
 ## Run it — 30 seconds, no key, no network
 

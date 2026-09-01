@@ -60,6 +60,7 @@ every push, not asserted in prose.
 | [Data-use commitments](../02-ai-governance/data-use-commitments.md) | **F6.** Three public statements about customer data that outside counsel will read together. |
 | [Model routing change management](../03-secure-development/model-routing-change-management.md) | Model routing as a governed change type, with the advance-notice gate first. |
 | [Claims-to-evidence map](../04-evidence-and-audit/claims-to-evidence.md) | Eleven public commitments; five attested, six assertions — and the six are the AI ones. |
+| [Audit clock](../04-evidence-and-audit/audit-clock.md) | When the SOC 2 Type II window closes — not publicly determinable, which is the finding. Also establishes that the security page's own "Last updated" stamp is stale across a revision that added a compliance claim. |
 | [Trust collateral](../05-stakeholder-management/trust-collateral.md) | **F5** and **F7.** A compliance category error on a sales page; no end-user docs and no changelog. |
 | [30 · 60 · 90](../30-60-90/) | The first quarter, sequenced by what unblocks revenue. |
 | [The config](../generated/companies/midpage/midpage.config.yaml) | One file, every value marked verified / filed / inferred / deliberately unset. |
