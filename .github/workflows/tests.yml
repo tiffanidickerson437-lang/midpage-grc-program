@@ -35,8 +35,13 @@ jobs:
         with:
           python-version: '3.12'
 
+      # Two invocations, not one. requirements.txt is hash-pinned, and pip applies
+      # hash checking to the entire resolution once any requirement carries a hash —
+      # so pulling the unpinned test dependency into the same install would fail.
       - name: Install
-        run: pip install -r requirements-dev.txt
+        run: |
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
 
       # The validators run FIRST. If an observation file is invalid, the tests that
       # assert "the committed data is valid" would fail anyway — but this ordering puts

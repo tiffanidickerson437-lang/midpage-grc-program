@@ -47,7 +47,8 @@ guard** (gut a comparator to always-pass and its own suite turns red). Same inpu
 output, every run. No model in the pass/fail path.
 
 ```bash
-pip install -r requirements-dev.txt && python3 -m pytest -q
+pip install -r requirements-dev.txt
+python3 -m pytest -q
 ```
 
 ---

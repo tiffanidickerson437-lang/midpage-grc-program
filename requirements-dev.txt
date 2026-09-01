@@ -1,8 +1,17 @@
-# Test-only dependency, kept out of requirements.txt on purpose.
+# Test-only dependency, kept in its own file on purpose.
 #
-# requirements.txt is hash-pinned so `pip install --require-hashes` works, and a single
-# unhashed line in that file would disable hash verification for every line in it. The
-# instruments themselves import nothing from here — `pip install pyyaml` runs all three.
+# requirements.txt pins pyyaml with the complete sha256 digest set so
+# `pip install --require-hashes -r requirements.txt` works. pip turns hash checking on
+# for the whole resolution as soon as any requirement carries a hash — including
+# requirements pulled in by a `-r` include — so a `-r requirements.txt` line here would
+# make this file fail unless pytest were hash-pinned too. It deliberately is not: pytest
+# is a developer tool, not part of what the instruments ship with.
+#
+# Install both, in this order:
+#     pip install -r requirements.txt
+#     pip install -r requirements-dev.txt
+#
+# The instruments themselves import nothing from here. `pip install pyyaml` runs all
+# three checkers.
 
--r requirements.txt
 pytest>=8.0
