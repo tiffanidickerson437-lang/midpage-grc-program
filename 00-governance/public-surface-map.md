@@ -28,6 +28,19 @@ Checked **1 September 2026** unless stated otherwise.
 | Data Processing Addendum | `https://www.midpage.ai/dpa` | Effective 28 April 2026; §4.2 advance-notice commitment and the subprocessor list URL; SCC, UK Addendum, and Swiss FADP definitions; controller/processor roles |
 | Privacy policy | `https://www.midpage.ai/privacy-policy` | 60-day post-termination deletion with a backup carve-out; the CCPA sale/sharing disclosure; cross-customer deidentified insights; the `midpage.ai/subprocessors` URL; registered contact address at 190 Bowery, New York, NY 10012 |
 
+## Archived copies
+
+Used only by the [audit clock](../04-evidence-and-audit/audit-clock.md), to establish
+that `/security` was revised after its own "Last updated" stamp.
+
+| Snapshot | URL |
+|---|---|
+| `/security`, 12 May 2026 | `http://web.archive.org/web/20260512071711/https://www.midpage.ai/security` |
+| `/security`, 14 May 2026 | `http://web.archive.org/web/20260514045749/https://www.midpage.ai/security` |
+| `/security`, 3 July 2026 | `http://web.archive.org/web/20260703170754/https://www.midpage.ai/security` |
+| SOC 2 Type I announcement, archived 25 Apr 2024 | `http://web.archive.org/web/20240425145744/https://www.midpage.ai/blog/midpage-is-now-soc-2-type-i-certified` |
+| "Type 2" page, archived 3 Mar 2024 | `http://web.archive.org/web/20240303132837/https://www.midpage.ai/blog/midpage-is-now-soc-2-type-2-certified` |
+
 ## Corporate record
 
 | Surface | URL | What it supplied |

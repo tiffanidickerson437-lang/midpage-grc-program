@@ -60,11 +60,12 @@ was live by [3 March 2024](http://web.archive.org/web/20240303132837/https://www
 An annual anniversary then lands in January or February, which would put the next window
 close in Q1 2027 and the current report going stale shortly after.
 
-**Reading B — the window closes around May or June.** Their trust center describes a web
-application penetration test "conducted June 2–4, 2026," which is a classic
-pre-window-close move, and the SOC 2 report document was published to the trust center in
-early August 2026 — consistent with a report delivered four to six weeks after a window
-closing in late spring.
+**Reading B — the window closes around May or June.** The trust center's own resource
+description states a web application penetration test "conducted June 2–4, 2026." A
+penetration test immediately before a window closes is a common sequence, and it is the
+only dated audit-adjacent activity Midpage publishes. On its own it is weak evidence —
+a pen test can sit anywhere in a year — but it is stated rather than inferred, which is
+more than Reading A can say for its own anchor.
 
 **Caveat on Reading A that matters:** the 2024 "Type 2" post carries the same body text
 as the Type I post and the same displayed date. The title changed; the words did not.
@@ -83,9 +84,18 @@ Both come from the trust center's own resource descriptions:
 - **Cyber liability insurance:** "coverage effective February 13, 2026 through February
   13, 2027."
 
-The insurance renewal date is worth a calendar entry on its own. It is the one hard
-compliance deadline visible from outside, and it arrives before either candidate audit
-window.
+The insurance renewal date is worth a calendar entry on its own. It is the one hard,
+dated compliance deadline visible from outside, and it arrives before either candidate
+audit window.
+
+## A note on method
+
+Nothing here rests on anything but rendered page text and archived copies of it. Vanta
+trust centers expose more than they display — internal identifiers, ordering, timestamps
+— and inferring dates from that machinery would have produced a tighter answer than the
+one above. It is deliberately not used. A finding a company cannot reproduce by looking
+at its own pages is a finding that has to be defended before it can be acted on, and
+this repository is not worth reading if its author will reach for that.
 
 ## Sources
 
