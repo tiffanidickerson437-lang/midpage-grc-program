@@ -67,7 +67,7 @@ by something, and the check runs on every push:
 | Static analysis on the tooling | [CodeQL](.github/workflows/codeql.yml), `security-extended`, across Python **and** the workflows themselves, weekly and on every push |
 | A vulnerable dependency cannot enter by PR | [Dependency review](.github/workflows/dependency-review.yml), `fail-on-severity: low` — at two dependencies, any finding is a decision rather than noise |
 | Action and dependency updates are reviewed | [Dependabot](.github/dependabot.yml) on both ecosystems; SHA pinning is the control, and needing to update deliberately is its cost |
-| No workflow can swallow a failure | No `|| true`, no `continue-on-error`, anywhere. A green check that cannot go red is decoration |
+| No workflow can swallow a failure | No `\|\| true`, no `continue-on-error`, anywhere. A green check that cannot go red is decoration |
 
 Repository settings: secret scanning and push protection on, Dependabot alerts and
 security updates on, `main` protected and gated on the `tests` check. Workflow
