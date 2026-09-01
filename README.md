@@ -61,7 +61,7 @@ it — and **no security, compliance, or privacy headcount at all.** Diligence r
 shared inbox.
 
 That is not carelessness. It is the correct trade for a company that went from pre-
-traction to $3M ARR on one seed round. The bill for it comes due at the Series A, and
+traction to $3M ARR on seed money. The bill for it comes due at the Series A, and
 [the Series A has not been filed yet](00-governance/public-surface-map.md) — one Form D,
 May 2025, nothing since. This repository is the operated version of the function, not a
 document about one.
