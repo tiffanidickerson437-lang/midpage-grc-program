@@ -14,4 +14,4 @@
 # The instruments themselves import nothing from here. `pip install pyyaml` runs all
 # three checkers.
 
-pytest>=8.0
+pytest>=9.2.0
